@@ -1,0 +1,135 @@
+<div class="dashboard animate-fade-in">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Welcome to the Election Management System</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon elections">🗳️</div>
+      <div class="stat-content">
+        <span class="stat-value">{{ elections().length }}</span>
+        <span class="stat-label">Total Elections</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon parties">🏛️</div>
+      <div class="stat-content">
+        <span class="stat-value">{{ parties().length }}</span>
+        <span class="stat-label">Political Parties</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon candidates">👥</div>
+      <div class="stat-content">
+        <span class="stat-value">{{ candidates().length }}</span>
+        <span class="stat-label">Candidates</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon voters">📋</div>
+      <div class="stat-content">
+        <span class="stat-value">{{ voters().length }}</span>
+        <span class="stat-label">Registered Voters</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <a routerLink="/admin/elections" class="action-card">
+        <span class="action-icon">➕</span>
+        <span class="action-text">Create Election</span>
+      </a>
+      <a routerLink="/admin/parties" class="action-card">
+        <span class="action-icon">🏛️</span>
+        <span class="action-text">Add Party</span>
+      </a>
+      <a routerLink="/admin/candidates" class="action-card">
+        <span class="action-icon">👤</span>
+        <span class="action-text">Add Candidate</span>
+      </a>
+      <a routerLink="/admin/voters" class="action-card">
+        <span class="action-icon">📝</span>
+        <span class="action-text">Register Voter</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Election Status Overview -->
+  <div class="section">
+    <h2>Election Status</h2>
+    <div class="status-grid">
+      <div class="status-card upcoming">
+        <div class="status-header">
+          <span class="status-icon">📅</span>
+          <span class="status-title">Upcoming</span>
+        </div>
+        <span class="status-count">{{ getElectionsByStatus('UPCOMING').length }}</span>
+      </div>
+
+      <div class="status-card ongoing">
+        <div class="status-header">
+          <span class="status-icon">🔴</span>
+          <span class="status-title">Ongoing</span>
+        </div>
+        <span class="status-count">{{ getElectionsByStatus('ONGOING').length }}</span>
+      </div>
+
+      <div class="status-card completed">
+        <div class="status-header">
+          <span class="status-icon">✅</span>
+          <span class="status-title">Completed</span>
+        </div>
+        <span class="status-count">{{ getElectionsByStatus('COMPLETED').length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Elections -->
+  @if (elections().length > 0) {
+    <div class="section">
+      <h2>Recent Elections</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Election Name</th>
+              <th>Status</th>
+              <th>Candidates</th>
+              <th>Total Votes</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (election of elections().slice(0, 5); track election.id) {
+              <tr>
+                <td>
+                  <strong>{{ election.name }}</strong>
+                  @if (election.description) {
+                    <p class="election-desc">{{ election.description }}</p>
+                  }
+                </td>
+                <td>
+                  <span class="badge" [class]="getStatusClass(election.status)">
+                    {{ election.status }}
+                  </span>
+                </td>
+                <td>{{ election.candidateCount || 0 }}</td>
+                <td>{{ election.totalVotes || 0 }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+
+

@@ -1,0 +1,74 @@
+<div class="admin-layout" [class.sidebar-collapsed]="sidebarCollapsed()">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">🗳️</span>
+        <span class="logo-text">VoteSecure</span>
+      </div>
+      <button class="collapse-btn" (click)="toggleSidebar()">
+        <span>{{ sidebarCollapsed() ? '→' : '←' }}</span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title">Overview</span>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-title">Management</span>
+        <a routerLink="/admin/elections" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🗳️</span>
+          <span class="nav-text">Elections</span>
+        </a>
+        <a routerLink="/admin/parties" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🏛️</span>
+          <span class="nav-text">Parties</span>
+        </a>
+        <a routerLink="/admin/candidates" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-text">Candidates</span>
+        </a>
+        <a routerLink="/admin/voters" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span class="nav-text">Voters</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-title">Reports</span>
+        <a routerLink="/admin/results" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span class="nav-text">Results</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">{{ getInitials() }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ authService.getUserName() }}</span>
+          <span class="user-role">Administrator</span>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()">
+        <span>🚪</span>
+        <span class="nav-text">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+
+

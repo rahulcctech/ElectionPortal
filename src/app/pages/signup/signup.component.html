@@ -1,0 +1,110 @@
+<div class="signup-page">
+  <div class="signup-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+  
+  <div class="signup-container animate-fade-in">
+    <div class="signup-header">
+      <div class="logo">
+        <span class="logo-icon">🗳️</span>
+        <span class="logo-text">VoteSecure</span>
+      </div>
+      <h1>Create Account</h1>
+      <p>Sign up as an admin to manage elections</p>
+    </div>
+
+    <form (ngSubmit)="onSignup()" class="signup-form">
+      <div class="input-group">
+        <label for="name">Full Name</label>
+        <input 
+          type="text" 
+          id="name"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="Enter your full name"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Enter your email"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="age">Age</label>
+          <input 
+            type="number" 
+            id="age"
+            [(ngModel)]="age"
+            name="age"
+            placeholder="Age"
+            min="1">
+        </div>
+
+        <div class="input-group">
+          <label for="gender">Gender</label>
+          <select id="gender" [(ngModel)]="gender" name="gender">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Create a password"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          type="password" 
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm your password"
+          required>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-alert animate-slide-up">
+          <span class="error-icon">⚠️</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="spinner-sm"></span>
+          Creating Account...
+        } @else {
+          Create Account
+          <span class="arrow">→</span>
+        }
+      </button>
+    </form>
+
+    <div class="login-link">
+      <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+
+

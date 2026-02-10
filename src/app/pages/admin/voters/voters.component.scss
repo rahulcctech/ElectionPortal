@@ -1,0 +1,122 @@
+.voters-page {
+  max-width: 1400px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  p { color: var(--text-muted); }
+}
+
+.voter-id {
+  padding: 0.25rem 0.5rem;
+  background: var(--surface-elevated);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+}
+
+.voter-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.voter-avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.age-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-error);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+
+  &.valid {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-success);
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 1000;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  h2 { font-size: 1.25rem; }
+}
+
+.modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.error-alert {
+  padding: 0.875rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+
+
+

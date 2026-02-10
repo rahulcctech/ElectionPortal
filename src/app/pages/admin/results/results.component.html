@@ -1,0 +1,115 @@
+<div class="results-page animate-fade-in">
+  <div class="page-header">
+    <div>
+      <h1>Election Results</h1>
+      <p>View real-time voting results</p>
+    </div>
+    <div class="election-select">
+      <select [(ngModel)]="selectedElectionId" (ngModelChange)="loadResults($event)">
+        <option [ngValue]="null">Select an election</option>
+        @for (election of elections(); track election.id) {
+          <option [ngValue]="election.id">
+            {{ election.name }} 
+            @if (election.status === 'ONGOING') { (🔴 Live) }
+          </option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (selectedResult()) {
+    <div class="results-content">
+      <!-- Summary Cards -->
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-label">Election Status</span>
+          <span class="summary-value status" [class]="getStatusClass(selectedResult()!.electionStatus)">
+            {{ selectedResult()!.electionStatus }}
+          </span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Total Votes Cast</span>
+          <span class="summary-value">{{ selectedResult()!.totalVotes }}</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Total Candidates</span>
+          <span class="summary-value">{{ selectedResult()!.candidateResults.length }}</span>
+        </div>
+      </div>
+
+      <!-- Results Chart -->
+      <div class="results-chart card">
+        <h3>Vote Distribution</h3>
+        <div class="chart-container">
+          @for (result of selectedResult()!.candidateResults; track result.candidateId; let i = $index) {
+            <div class="chart-row animate-slide-up" [style.animation-delay]="i * 100 + 'ms'">
+              <div class="candidate-info">
+                <div class="rank" [class.winner]="result.isWinner">
+                  @if (result.isWinner) { 👑 } @else { {{ i + 1 }} }
+                </div>
+                <div class="candidate-details">
+                  <span class="candidate-name">{{ result.candidateName }}</span>
+                  <span class="party-name">{{ result.partyName }}</span>
+                </div>
+              </div>
+              <div class="vote-bar-container">
+                <div 
+                  class="vote-bar" 
+                  [class.winner]="result.isWinner"
+                  [style.width]="result.percentage + '%'">
+                </div>
+                <span class="vote-count">{{ result.voteCount }} votes ({{ result.percentage }}%)</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Detailed Table -->
+      <div class="results-table card">
+        <h3>Detailed Results</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Candidate</th>
+                <th>Party</th>
+                <th>Votes</th>
+                <th>Percentage</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (result of selectedResult()!.candidateResults; track result.candidateId; let i = $index) {
+                <tr [class.winner-row]="result.isWinner">
+                  <td>{{ i + 1 }}</td>
+                  <td><strong>{{ result.candidateName }}</strong></td>
+                  <td>{{ result.partyName }}</td>
+                  <td>{{ result.voteCount }}</td>
+                  <td>{{ result.percentage }}%</td>
+                  <td>
+                    @if (result.isWinner) {
+                      <span class="badge badge-success">🏆 Winner</span>
+                    } @else {
+                      <span class="badge badge-info">Candidate</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-state card">
+      <div class="empty-icon">📊</div>
+      <h3>Select an Election</h3>
+      <p>Choose an election from the dropdown to view results</p>
+    </div>
+  }
+</div>
+
+
+

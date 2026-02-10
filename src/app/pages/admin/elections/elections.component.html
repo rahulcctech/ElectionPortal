@@ -1,0 +1,186 @@
+<div class="elections-page animate-fade-in">
+  <div class="page-header">
+    <div>
+      <h1>Manage Elections</h1>
+      <p>Create and manage election campaigns</p>
+    </div>
+    <button class="btn btn-primary" (click)="openModal()">
+      <span>➕</span> Create Election
+    </button>
+  </div>
+
+  <!-- Elections Table -->
+  @if (elections().length > 0) {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Election Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Candidates</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (election of elections(); track election.id) {
+            <tr class="animate-slide-up">
+              <td><strong>{{ election.name }}</strong></td>
+              <td class="description-cell">{{ election.description || '-' }}</td>
+              <td>
+                <span class="badge" [class]="getStatusClass(election.status)">
+                  {{ election.status }}
+                </span>
+              </td>
+              <td>{{ formatDate(election.startTime) }}</td>
+              <td>{{ formatDate(election.endTime) }}</td>
+              <td>{{ election.candidateCount || 0 }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn btn-ghost btn-sm" (click)="editElection(election)" title="Edit">
+                    ✏️
+                  </button>
+                  <button class="btn btn-ghost btn-sm" (click)="openStatusModal(election)" title="Change Status">
+                    🔄
+                  </button>
+                  <button class="btn btn-ghost btn-sm" (click)="deleteElection(election)" title="Delete">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state card">
+      <div class="empty-icon">🗳️</div>
+      <h3>No Elections Yet</h3>
+      <p>Create your first election to get started</p>
+      <button class="btn btn-primary" (click)="openModal()">Create Election</button>
+    </div>
+  }
+
+  <!-- Create/Edit Modal -->
+  @if (showModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal animate-slide-up" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editingElection() ? 'Edit Election' : 'Create Election' }}</h2>
+          <button class="btn btn-ghost btn-icon" (click)="closeModal()">✕</button>
+        </div>
+        <form (ngSubmit)="saveElection()" class="modal-body">
+          <div class="input-group">
+            <label for="name">Election Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="formData.name" 
+              name="name"
+              placeholder="Enter election name"
+              required>
+          </div>
+
+          <div class="input-group">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              [(ngModel)]="formData.description" 
+              name="description"
+              placeholder="Enter election description"
+              rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label for="startTime">Start Time</label>
+              <input 
+                type="datetime-local" 
+                id="startTime" 
+                [(ngModel)]="formData.startTime" 
+                name="startTime">
+            </div>
+
+            <div class="input-group">
+              <label for="endTime">End Time</label>
+              <input 
+                type="datetime-local" 
+                id="endTime" 
+                [(ngModel)]="formData.endTime" 
+                name="endTime">
+            </div>
+          </div>
+
+          @if (editingElection()) {
+            <div class="input-group">
+              <label for="status">Status</label>
+              <select id="status" [(ngModel)]="formData.status" name="status">
+                <option value="UPCOMING">Upcoming</option>
+                <option value="ONGOING">Ongoing</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+            </div>
+          }
+
+          @if (errorMessage()) {
+            <div class="error-alert">{{ errorMessage() }}</div>
+          }
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+              {{ isLoading() ? 'Saving...' : 'Save Election' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Status Change Modal -->
+  @if (showStatusModal()) {
+    <div class="modal-overlay" (click)="closeStatusModal()">
+      <div class="modal modal-sm animate-slide-up" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Change Election Status</h2>
+          <button class="btn btn-ghost btn-icon" (click)="closeStatusModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>Update status for <strong>{{ selectedElection()?.name }}</strong></p>
+          <div class="status-options">
+            <button 
+              class="status-btn upcoming" 
+              [class.active]="selectedStatus() === 'UPCOMING'"
+              (click)="selectStatus('UPCOMING')">
+              📅 Upcoming
+            </button>
+            <button 
+              class="status-btn ongoing" 
+              [class.active]="selectedStatus() === 'ONGOING'"
+              (click)="selectStatus('ONGOING')">
+              🔴 Ongoing
+            </button>
+            <button 
+              class="status-btn completed" 
+              [class.active]="selectedStatus() === 'COMPLETED'"
+              (click)="selectStatus('COMPLETED')">
+              ✅ Completed
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeStatusModal()">Cancel</button>
+            <button class="btn btn-primary" (click)="updateStatus()" [disabled]="isLoading()">
+              Update Status
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+
+

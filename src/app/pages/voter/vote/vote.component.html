@@ -1,0 +1,114 @@
+<div class="vote-page animate-fade-in">
+  <div class="page-header">
+    <h1>🗳️ Cast Your Vote</h1>
+    <p>Select an ongoing election to cast your vote</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading elections...</p>
+    </div>
+  } @else if (elections().length === 0) {
+    <div class="empty-state card">
+      <div class="empty-icon">📅</div>
+      <h3>No Active Elections</h3>
+      <p>There are no ongoing elections at the moment. Please check back later.</p>
+    </div>
+  } @else {
+    <div class="elections-list">
+      @for (election of elections(); track election.id) {
+        <div class="election-card card" [class.expanded]="selectedElection()?.id === election.id">
+          <div class="election-header" (click)="selectElection(election)">
+            <div class="election-info">
+              <div class="election-status">
+                <span class="live-indicator"></span>
+                LIVE
+              </div>
+              <h2>{{ election.name }}</h2>
+              @if (election.description) {
+                <p>{{ election.description }}</p>
+              }
+            </div>
+            <div class="election-expand">
+              {{ selectedElection()?.id === election.id ? '▼' : '▶' }}
+            </div>
+          </div>
+
+          @if (selectedElection()?.id === election.id) {
+            <div class="candidates-section animate-slide-up">
+              @if (hasVoted()) {
+                <div class="voted-message">
+                  <div class="voted-icon">✅</div>
+                  <h3>Thank You for Voting!</h3>
+                  <p>You have already cast your vote in this election.</p>
+                </div>
+              } @else if (candidates().length === 0) {
+                <div class="no-candidates">
+                  <p>No candidates are registered for this election yet.</p>
+                </div>
+              } @else {
+                <h3>Select Your Candidate</h3>
+                <div class="candidates-grid">
+                  @for (candidate of candidates(); track candidate.id) {
+                    <button 
+                      class="candidate-option"
+                      [class.selected]="selectedCandidate()?.id === candidate.id"
+                      (click)="selectCandidate(candidate)">
+                      <div class="candidate-avatar">{{ getInitials(candidate.name) }}</div>
+                      <div class="candidate-details">
+                        <span class="candidate-name">{{ candidate.name }}</span>
+                        <span class="party-name">{{ candidate.partyName }}</span>
+                      </div>
+                      <div class="select-indicator">
+                        @if (selectedCandidate()?.id === candidate.id) {
+                          ✓
+                        }
+                      </div>
+                    </button>
+                  }
+                </div>
+
+                @if (selectedCandidate()) {
+                  <div class="vote-action">
+                    <div class="selected-summary">
+                      <span>Your Selection:</span>
+                      <strong>{{ selectedCandidate()!.name }}</strong>
+                      <span>({{ selectedCandidate()!.partyName }})</span>
+                    </div>
+                    <button 
+                      class="btn btn-primary btn-lg"
+                      (click)="confirmVote()"
+                      [disabled]="isVoting()">
+                      @if (isVoting()) {
+                        <span class="spinner-sm"></span>
+                        Submitting Vote...
+                      } @else {
+                        Confirm & Submit Vote
+                      }
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Success Modal -->
+  @if (showSuccessModal()) {
+    <div class="modal-overlay">
+      <div class="success-modal animate-slide-up">
+        <div class="success-icon">🎉</div>
+        <h2>Vote Submitted Successfully!</h2>
+        <p>Thank you for participating in the democratic process.</p>
+        <button class="btn btn-primary" (click)="closeSuccessModal()">Done</button>
+      </div>
+    </div>
+  }
+</div>
+
+
+

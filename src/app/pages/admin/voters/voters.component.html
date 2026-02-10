@@ -1,0 +1,133 @@
+<div class="voters-page animate-fade-in">
+  <div class="page-header">
+    <div>
+      <h1>Manage Voters</h1>
+      <p>Register and manage eligible voters</p>
+    </div>
+    <button class="btn btn-primary" (click)="openModal()">
+      <span>➕</span> Register Voter
+    </button>
+  </div>
+
+  @if (voters().length > 0) {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Voter ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (voter of voters(); track voter.id) {
+            <tr class="animate-slide-up">
+              <td>
+                <code class="voter-id">{{ voter.voterId }}</code>
+              </td>
+              <td>
+                <div class="voter-info">
+                  <div class="voter-avatar">{{ getInitials(voter.name) }}</div>
+                  <strong>{{ voter.name }}</strong>
+                </div>
+              </td>
+              <td>{{ voter.email }}</td>
+              <td>
+                <span class="age-badge" [class.valid]="voter.age >= 18">
+                  {{ voter.age }} years
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn btn-ghost btn-sm" (click)="editVoter(voter)">✏️</button>
+                  <button class="btn btn-ghost btn-sm" (click)="deleteVoter(voter)">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state card">
+      <div class="empty-icon">📋</div>
+      <h3>No Voters Registered</h3>
+      <p>Register your first voter to get started</p>
+      <button class="btn btn-primary" (click)="openModal()">Register Voter</button>
+    </div>
+  }
+
+  @if (showModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal animate-slide-up" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editingVoter() ? 'Edit Voter' : 'Register Voter' }}</h2>
+          <button class="btn btn-ghost btn-icon" (click)="closeModal()">✕</button>
+        </div>
+        <form (ngSubmit)="saveVoter()" class="modal-body">
+          <div class="input-group">
+            <label for="name">Full Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="formData.name" 
+              name="name"
+              placeholder="Enter full name"
+              required>
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email Address *</label>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="formData.email" 
+              name="email"
+              placeholder="Enter email address"
+              required>
+          </div>
+
+          <div class="input-group">
+            <label for="age">Age *</label>
+            <input 
+              type="number" 
+              id="age" 
+              [(ngModel)]="formData.age" 
+              name="age"
+              placeholder="Enter age (must be 18+)"
+              min="18"
+              required>
+            <span class="input-hint">Voter must be at least 18 years old</span>
+          </div>
+
+          <div class="input-group">
+            <label for="password">{{ editingVoter() ? 'New Password (optional)' : 'Password *' }}</label>
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="formData.password" 
+              name="password"
+              placeholder="Enter password"
+              [required]="!editingVoter()">
+          </div>
+
+          @if (errorMessage()) {
+            <div class="error-alert">{{ errorMessage() }}</div>
+          }
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+              {{ isLoading() ? 'Saving...' : 'Save Voter' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
+
+
+

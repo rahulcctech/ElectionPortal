@@ -1,0 +1,41 @@
+<div class="voter-layout">
+  <!-- Header -->
+  <header class="voter-header">
+    <div class="header-content">
+      <div class="logo">
+        <span class="logo-icon">🗳️</span>
+        <span class="logo-text">VoteSecure</span>
+      </div>
+      
+      <nav class="header-nav">
+        <a routerLink="/voter/vote" routerLinkActive="active">
+          <span class="nav-icon">✓</span>
+          Cast Vote
+        </a>
+        <a routerLink="/voter/results" routerLinkActive="active">
+          <span class="nav-icon">📊</span>
+          Results
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="user-info">
+          <span class="user-name">{{ authService.getUserName() }}</span>
+          <span class="user-badge">Voter</span>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          <span>🚪</span>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="voter-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+
+

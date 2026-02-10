@@ -1,0 +1,85 @@
+<div class="login-page">
+  <div class="login-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  
+  <div class="login-container animate-fade-in">
+    <div class="login-header">
+      <div class="logo">
+        <span class="logo-icon">🗳️</span>
+        <span class="logo-text">VoteSecure</span>
+      </div>
+      <h1>Welcome Back</h1>
+      <p>Sign in to manage elections or cast your vote</p>
+    </div>
+
+    <div class="user-type-toggle">
+      <button 
+        [class.active]="userType() === 'ADMIN'"
+        (click)="setUserType('ADMIN')">
+        <span class="icon">👤</span>
+        Admin
+      </button>
+      <button 
+        [class.active]="userType() === 'VOTER'"
+        (click)="setUserType('VOTER')">
+        <span class="icon">🗳️</span>
+        Voter
+      </button>
+    </div>
+
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <div class="input-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Enter your email"
+          required
+          [class.error]="errorMessage()">
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+          [class.error]="errorMessage()">
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-alert animate-slide-up">
+          <span class="error-icon">⚠️</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="spinner-sm"></span>
+          Signing in...
+        } @else {
+          Sign In
+          <span class="arrow">→</span>
+        }
+      </button>
+    </form>
+
+    @if (userType() === 'ADMIN') {
+      <div class="signup-link">
+        <p>Don't have an account? <a routerLink="/signup">Create Account</a></p>
+      </div>
+    }
+  </div>
+</div>
+
+
+

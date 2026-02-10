@@ -1,0 +1,102 @@
+<div class="parties-page animate-fade-in">
+  <div class="page-header">
+    <div>
+      <h1>Manage Parties</h1>
+      <p>Create and manage political parties</p>
+    </div>
+    <button class="btn btn-primary" (click)="openModal()">
+      <span>➕</span> Add Party
+    </button>
+  </div>
+
+  @if (parties().length > 0) {
+    <div class="parties-grid">
+      @for (party of parties(); track party.id) {
+        <div class="party-card animate-slide-up">
+          <div class="party-header">
+            <div class="party-symbol">{{ party.symbol || '🏛️' }}</div>
+            <div class="party-info">
+              <h3>{{ party.name }}</h3>
+              <span class="party-candidates">{{ party.candidateCount || 0 }} candidates</span>
+            </div>
+          </div>
+          @if (party.description) {
+            <p class="party-description">{{ party.description }}</p>
+          }
+          <div class="party-actions">
+            <button class="btn btn-secondary btn-sm" (click)="editParty(party)">
+              ✏️ Edit
+            </button>
+            <button class="btn btn-ghost btn-sm" (click)="deleteParty(party)">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state card">
+      <div class="empty-icon">🏛️</div>
+      <h3>No Parties Yet</h3>
+      <p>Add your first political party to get started</p>
+      <button class="btn btn-primary" (click)="openModal()">Add Party</button>
+    </div>
+  }
+
+  @if (showModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal animate-slide-up" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editingParty() ? 'Edit Party' : 'Add Party' }}</h2>
+          <button class="btn btn-ghost btn-icon" (click)="closeModal()">✕</button>
+        </div>
+        <form (ngSubmit)="saveParty()" class="modal-body">
+          <div class="input-group">
+            <label for="name">Party Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="formData.name" 
+              name="name"
+              placeholder="Enter party name"
+              required>
+          </div>
+
+          <div class="input-group">
+            <label for="symbol">Party Symbol (emoji)</label>
+            <input 
+              type="text" 
+              id="symbol" 
+              [(ngModel)]="formData.symbol" 
+              name="symbol"
+              placeholder="🏛️">
+          </div>
+
+          <div class="input-group">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              [(ngModel)]="formData.description" 
+              name="description"
+              placeholder="Enter party description"
+              rows="3"></textarea>
+          </div>
+
+          @if (errorMessage()) {
+            <div class="error-alert">{{ errorMessage() }}</div>
+          }
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+              {{ isLoading() ? 'Saving...' : 'Save Party' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
+
+
+

@@ -1,0 +1,114 @@
+<div class="candidates-page animate-fade-in">
+  <div class="page-header">
+    <div>
+      <h1>Manage Candidates</h1>
+      <p>Add and manage election candidates</p>
+    </div>
+    <button class="btn btn-primary" (click)="openModal()">
+      <span>➕</span> Add Candidate
+    </button>
+  </div>
+
+  @if (candidates().length > 0) {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Candidate Name</th>
+            <th>Party</th>
+            <th>Election</th>
+            <th>Votes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (candidate of candidates(); track candidate.id) {
+            <tr class="animate-slide-up">
+              <td>
+                <div class="candidate-info">
+                  <div class="candidate-avatar">{{ getInitials(candidate.name) }}</div>
+                  <strong>{{ candidate.name }}</strong>
+                </div>
+              </td>
+              <td>
+                <span class="party-tag">{{ candidate.partyName }}</span>
+              </td>
+              <td>{{ candidate.electionName }}</td>
+              <td>{{ candidate.voteCount || 0 }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn btn-ghost btn-sm" (click)="editCandidate(candidate)">✏️</button>
+                  <button class="btn btn-ghost btn-sm" (click)="deleteCandidate(candidate)">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state card">
+      <div class="empty-icon">👥</div>
+      <h3>No Candidates Yet</h3>
+      <p>Add your first candidate to get started</p>
+      <button class="btn btn-primary" (click)="openModal()">Add Candidate</button>
+    </div>
+  }
+
+  @if (showModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal animate-slide-up" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editingCandidate() ? 'Edit Candidate' : 'Add Candidate' }}</h2>
+          <button class="btn btn-ghost btn-icon" (click)="closeModal()">✕</button>
+        </div>
+        <form (ngSubmit)="saveCandidate()" class="modal-body">
+          <div class="input-group">
+            <label for="name">Candidate Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="formData.name" 
+              name="name"
+              placeholder="Enter candidate name"
+              required>
+          </div>
+
+          <div class="input-group">
+            <label for="party">Party *</label>
+            <select id="party" [(ngModel)]="formData.partyId" name="partyId" required>
+              <option [ngValue]="null">Select a party</option>
+              @for (party of parties(); track party.id) {
+                <option [ngValue]="party.id">{{ party.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="election">Election *</label>
+            <select id="election" [(ngModel)]="formData.electionId" name="electionId" required>
+              <option [ngValue]="null">Select an election</option>
+              @for (election of elections(); track election.id) {
+                <option [ngValue]="election.id">{{ election.name }}</option>
+              }
+            </select>
+          </div>
+
+          @if (errorMessage()) {
+            <div class="error-alert">{{ errorMessage() }}</div>
+          }
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+              {{ isLoading() ? 'Saving...' : 'Save Candidate' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
+
+
+
